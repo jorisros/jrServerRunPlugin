@@ -36,18 +36,49 @@ EOF;
     // $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
     try{
-      $this->checkPhpVersion();
+      $php = $this->checkPhp();
+      $phpversion = $this->checkVersion();
     } catch(sfCommandException $e)
     {
-      $this->logBlock('Server started at http://localhost:8000/frontend_dev.php\n\nPress Control + C to end...\n', 'INFO');
-      //var_dump($e);
+         //var_dump($e);
     }
+    $this->logBlock("\nServer started at http://localhost:8000/frontend_dev.php\n\nPress Control + C to end...\n", 'INFO');
 
-    exec("php -S localhost:8000 -t web", $output);
+    exec($php." -S ".$options['host'].":".$options['port']." -t ".sfConfig::get('sf_web_dir'));
   }
 
-  private function checkPhpVersion()
+  private function checkVersion()
   {
-    //throw new sfCommandException('test');
+    $currentVersion = phpversion();
+    $arr = explode('.',$currentVersion);
+    $error = "PHP not support a build-in server, us at least 5.4.*, you are using:".$currentVersion;
+    if($arr[1]<4)
+    {
+      throw new sfException($error);
+    }
+    if($arr[0]<5)
+    {
+      throw new sfException($error);
+    }
+    return $currentVersion;
+  }
+  
+  private function checkPhp()
+  {
+      $paths = explode(PATH_SEPARATOR, getenv('PATH'));
+      foreach ($paths as $path) {
+        // we need this for XAMPP (Windows)
+        if (strstr($path, 'php.exe') && isset($_SERVER["WINDIR"]) && file_exists($path) && is_file($path)) {
+          return $path;
+        }
+        else {
+          $php_executable = $path . DIRECTORY_SEPARATOR . "php" . (isset($_SERVER["WINDIR"]) ? ".exe" : "");
+          if (file_exists($php_executable) && is_file($php_executable)) {
+            return $php_executable;
+          }
+        }
+      }
+
+      throw new sfException("PHP not found !!");
   }
 }
