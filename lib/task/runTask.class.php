@@ -42,7 +42,7 @@ EOF;
     {
          //var_dump($e);
     }
-    $this->logBlock("\nServer started at http://localhost:8000/frontend_dev.php\n\nPress Control + C to end...\n", 'INFO');
+    $this->logBlock("\nServer started at http://".$options['host'].":".$options['port']."/frontend_dev.php\n\nPress Control + C to end...\n", 'INFO');
 
     exec($php." -S ".$options['host'].":".$options['port']." -t ".sfConfig::get('sf_web_dir'));
   }
