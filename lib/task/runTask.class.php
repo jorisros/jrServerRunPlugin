@@ -68,7 +68,6 @@ EOF;
       $paths = explode(PATH_SEPARATOR, getenv('PATH'));
       foreach ($paths as $path) {
         // we need this for XAMPP (Windows)
-		var_dump($path);
         if (strstr($path, 'php') && isset($_SERVER["windir"]) && file_exists($path.'\php.exe') && is_file($path.'\php.exe')) {
           return $path.'\php.exe';
         }
