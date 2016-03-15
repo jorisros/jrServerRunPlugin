@@ -52,17 +52,15 @@ EOF;
     $currentVersion = phpversion();
     $arr = explode('.',$currentVersion);
     $error = "PHP not support a build-in server, us at least 5.4.*, you are using:".$currentVersion;
-    if($arr[1]<4)
+
+    if($arr[0]<5 && $arr[1]<4)
     {
       throw new sfException($error);
     }
-    if($arr[0]<5)
-    {
-      throw new sfException($error);
-    }
+
     return $currentVersion;
   }
-  
+
   private function checkPhp()
   {
       $paths = explode(PATH_SEPARATOR, getenv('PATH'));
