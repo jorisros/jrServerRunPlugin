@@ -63,20 +63,20 @@ EOF;
 
   private function checkPhp()
   {
-      $paths = explode(PATH_SEPARATOR, getenv('PATH'));
-      foreach ($paths as $path) {
-        // we need this for XAMPP (Windows)
-        if (strstr($path, 'php') && isset($_SERVER["windir"]) && file_exists($path.'\php.exe') && is_file($path.'\php.exe')) {
-          return $path.'\php.exe';
-        }
-        else {
-          $php_executable = $path . DIRECTORY_SEPARATOR . "php" . (isset($_SERVER["windir"]) ? ".exe" : "");
-          if (file_exists($php_executable) && is_file($php_executable)) {
-            return $php_executable;
-          }
+    $paths = explode(PATH_SEPARATOR, getenv('PATH'));
+    foreach ($paths as $path) {
+      // we need this for XAMPP (Windows)
+      if (strstr($path, 'php') || isset($_SERVER["windir"]) || file_exists($path.DIRECTORY_SEPARATOR.'php.exe') || is_file($path.DIRECTORY_SEPARATOR.'php.exe')) {
+        return $path.DIRECTORY_SEPARATOR.'php.exe';
+      }
+      else {
+        $php_executable = $path . DIRECTORY_SEPARATOR . "php" . (isset($_SERVER["windir"]) ? ".exe" : "");
+        if (file_exists($php_executable) && is_file($php_executable)) {
+          return $php_executable;
         }
       }
+    }
 
-      throw new sfException("PHP not found !!");
+    throw new sfException("PHP not found !!");
   }
 }
